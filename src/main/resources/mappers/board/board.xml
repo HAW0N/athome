@@ -3,9 +3,10 @@
 <mapper namespace="board">
 
 	<insert id="insert">
-		insert into board (idx, title, contents, writer, hit)
+		insert into board (idx, title, contents,  hit)
 		values
-		(#{idx},#{title}, #{contents}, #{writer}, #{hit})
+		(#{idx},#{title}, #{contents},  #{hit})
+
 
 	</insert>
 
@@ -39,7 +40,7 @@
 		select idx, title, contents,
 		writer, b.regdate, hit
 		from board b, member m
-		where b.writer=m.userid
+		where b.writer=m.name
 		and idx=#{idx}
 	</select>
 	

@@ -1,47 +1,61 @@
 package com.example.test.controller;
 
-import java.util.List;
+import javax.validation.Valid;
 
-import javax.inject.Inject;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.test.model.MemberDAO;
-import com.example.test.model.MemberDTO;
+import com.example.test.entity.Member;
+import com.example.test.model.MemberFormDTO;
+import com.example.test.service.MemberService;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@RequestMapping(value = "/members")
 @Controller
 public class MemberController {
-	
-	@Inject
-	MemberDAO memberDao;
-	
-	
-	
-	@RequestMapping("member/list.do")
-	public String memberList(Model model) {
-		List<MemberDTO> list = memberDao.list();
-		model.addAttribute("list", list);
-		return "member/list";
-	}
-	
-	@RequestMapping("member/write.do")
-	public String write() {
-		return "member/join";
-	}
-	
-	@RequestMapping("member/insert.do")
-	public String insert(@ModelAttribute MemberDTO dto) {
-		memberDao.insert(dto);
-		return "redirect:/member/login.do";
-	}
-	
-	
-	
-	
-	
 
+    private final MemberService memberService;
+    private final PasswordEncoder passwordEncoder;
+
+    @GetMapping(value = "/new")
+    public String memberForm(Model model) {
+        model.addAttribute("memberFormDTO", new MemberFormDTO());
+        return "member/memberForm";
+    }
+
+    @PostMapping(value = "/new")
+    public String memberForm(@Valid MemberFormDTO memberFormDTO, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "member/memberForm";
+        }
+
+        try {
+            Member member = Member.createMember(memberFormDTO, passwordEncoder);
+            memberService.saveMember(member);
+        } catch (IllegalStateException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "member/memberForm";
+        }
+
+        return "redirect:/";
+    }
+    @GetMapping("/login")
+    public String loginMember() {
+        //System.out.println("....login....");
+
+        return "/member/memberLoginForm";
+    }
+
+    @GetMapping(value = "/login/error")
+    public String loginError(Model model) {
+        model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요.");
+        return "/member/memberLoginForm";
+    }
 }

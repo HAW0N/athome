@@ -1,8 +1,10 @@
 package com.example.test.controller;
 
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -24,13 +26,24 @@ public class BoardController{
 	@Inject
 	BoardService boardService;
 	@RequestMapping("write.do")
-	public String write(){
+	public String write(HttpSession session){
+		
+		Enumeration<?> attrName = session.getAttributeNames();
+		while (attrName.hasMoreElements()) {
+		    String attr = (String) attrName.nextElement();
+		    System.out.println(session.getAttribute(attr));
+		}
 		return "board/write";
 	}
 	@RequestMapping("insert.do")
-	public String insert(BoardDTO dto,HttpSession session){
-		String writer=(String)session.getAttribute("userid");
+	public String insert(BoardDTO dto,HttpServletRequest request,String writer){
+		//String writer=(String)session.getAttribute("email");
+		//HttpSession session = request.getSession();
+//		String writer=(String)session.getAttribute("Username");
+		System.out.println(writer);
+		
 		dto.setWriter(writer);
+		System.out.println(dto.toString());
 		boardService.insert(dto);
 		return "redirect:/listPage";
 	}
@@ -57,11 +70,12 @@ public class BoardController{
 		
 		return "/board/listPage";
 	}
+
 	
 	
 	
 	
-	@RequestMapping("detail.do")
+	@RequestMapping("board/detail.do")
 	public ModelAndView detail(int idx){
 	boardService.increase_hit(idx);//조회수증가처리
 	ModelAndView mav=new ModelAndView();
