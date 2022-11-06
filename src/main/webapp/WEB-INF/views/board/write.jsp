@@ -38,7 +38,8 @@ width:600px; height:100px; border:1pxdottedgray; background-color:gray;
 <div style="width:800px">
 <textarea rows="5"cols="80"id="contents"name="contents" placeholder="내용을입력하세요"></textarea>
 </div>
-<input type="hidden" name="writer" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.email}">
+
+<%-- <input type="hidden" name="writer" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.email}"> --%>
 <div style="width:700px;text-align:center;">
 <button style="button" id="btnSave">확인</button>
 </div>

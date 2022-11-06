@@ -6,6 +6,8 @@ import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.example.test.entity.Member;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -37,6 +39,7 @@ public class MemberFormDTO {
         this.password = password;
         this.address = address;
     }
+
 
 	
 }

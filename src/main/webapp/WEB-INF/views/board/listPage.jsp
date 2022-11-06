@@ -19,6 +19,10 @@
 	});
 </script>
 </head>
+<style>
+tr{
+text-align:center;}
+</style>
 <body>
 	<div class="wrap">
 

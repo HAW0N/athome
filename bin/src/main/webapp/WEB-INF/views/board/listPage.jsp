@@ -2,6 +2,8 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,25 +26,22 @@
 			<a href="/">메인</a>
 		</h1>
 		<div class="header">
-			<c:choose>
-				<c:when test="${sessionScope.userid == null }">
-					<a href="/member/login.do">로그인</a>
-					<a href="/member/write.do">회원가입</a>
-				</c:when>
-				<c:otherwise>
-	${sessionScope.name}님이로그인중입니다.
-		<a href="/member/logout.do">로그아웃</a>
-				</c:otherwise>
-			</c:choose>
+			<sec:authorize access="isAnonymous()">
+				<a href="/members/login">로그인</a>
+				<a href="/members/new">회원가입</a>
+			</sec:authorize>
+
+			<sec:authorize access="isAuthenticated()">
+				<a href="/members/logout">로그아웃</a>
+			</sec:authorize>
 		</div>
 		<h2>게시판</h2>
 
 		<div class="container">
 
-			<c:if test="${sessionScope.userid != null}">
+			<sec:authorize access="isAuthenticated()">
 				<button type="button" id="btnWrite">글쓰기</button>
-			</c:if>
-
+			</sec:authorize>
 			<table class="QA" width="600px">
 				<tr>
 					<th>No</th>
@@ -54,7 +53,7 @@
 				<c:forEach var="row" items="${list}">
 					<tr>
 						<td>${row.idx}</td>
-						<td><a href="/detail.do?idx=${row.idx}">${row.title}</a></td>
+						<td><a href="board/detail.do?idx=${row.idx}">${row.title}</a></td>
 						<td>${row.writer}</td>
 						<td><fmt:formatDate value="${row.regdate}"
 								pattern="yyyy-MM-dd  HH:mm" /></td>
@@ -70,15 +69,16 @@
 						] 
 				</c:if>
 
-				<c:forEach begin="${page.startPageNum}" end="${page.endPageNum}" var="num">
+				<c:forEach begin="${page.startPageNum}" end="${page.endPageNum}"
+					var="num">
 					<span> <c:if test="${select != num}">
 							<a href="/listPage?num=${num}">${num}</a>
 						</c:if> <c:if test="${select == num}">
 							<b>${num}</b>
 						</c:if>
-						</span>
+					</span>
 				</c:forEach>
-					
+
 				<c:if test="${page.next}">
 					<span>[ <a href="/listPage?num=${page.endPageNum + 1}">다음</a></span>
 						] 

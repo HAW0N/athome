@@ -1,5 +1,6 @@
 package com.example.test.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,7 +48,12 @@ public class MemberController {
         return "redirect:/";
     }
     @GetMapping("/login")
-    public String loginMember() {
+    public String loginMember(HttpServletRequest request,
+            Model model) {
+    	String uri = request.getHeader("Referer");
+        if (uri != null && !uri.contains("/login")) {
+            request.getSession().setAttribute("prevPage", uri);
+        }
         //System.out.println("....login....");
 
         return "/member/memberLoginForm";

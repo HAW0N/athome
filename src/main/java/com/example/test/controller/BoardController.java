@@ -4,7 +4,6 @@ import java.util.Enumeration;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -17,34 +16,37 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.test.domain.Page;
 import com.example.test.model.BoardDTO;
 import com.example.test.service.BoardService;
+import com.example.test.service.MemberService;
 
 
 
-@Controller()
-
+@Controller
 public class BoardController{
 	@Inject
 	BoardService boardService;
+	@Inject
+	MemberService memberService;
 	@RequestMapping("write.do")
 	public String write(HttpSession session){
 		
+		System.out.println("--------------log-------------");
 		Enumeration<?> attrName = session.getAttributeNames();
 		while (attrName.hasMoreElements()) {
 		    String attr = (String) attrName.nextElement();
 		    System.out.println(session.getAttribute(attr));
+		    
 		}
+		System.out.println("--------------log-------------");
 		return "board/write";
 	}
 	@RequestMapping("insert.do")
-	public String insert(BoardDTO dto,HttpServletRequest request,String writer){
-		//String writer=(String)session.getAttribute("email");
-		//HttpSession session = request.getSession();
-//		String writer=(String)session.getAttribute("Username");
-		System.out.println(writer);
-		
+	public String insert(BoardDTO dto,HttpSession session, MemberService memberService){
+		String writer=(String)session.getAttribute("username");
+		System.out.println("--------------log1-------------");
 		dto.setWriter(writer);
-		System.out.println(dto.toString());
+		System.out.println("--------------log2-------------");
 		boardService.insert(dto);
+		System.out.println("--------------log3-------------");
 		return "redirect:/listPage";
 	}
 	

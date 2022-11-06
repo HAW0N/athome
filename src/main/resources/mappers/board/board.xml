@@ -3,9 +3,9 @@
 <mapper namespace="board">
 
 	<insert id="insert">
-		insert into board (idx, title, contents,  hit)
+		insert into board (idx, title, contents, writer,  hit)
 		values
-		(#{idx},#{title}, #{contents},  #{hit})
+		(#{idx},#{title}, #{contents}, #{writer}, #{hit})
 
 
 	</insert>

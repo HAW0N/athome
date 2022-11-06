@@ -55,7 +55,7 @@
 				<c:forEach var="row" items="${map.list}">
 					<tr>
 						<td>${row.idx}</td>
-						<td><a href="/detail.do?idx=${row.idx}">${row.title}</a></td>
+						<td><a href="detail.do?idx=${row.idx}">${row.title}</a></td>
 						<td>${row.writer}</td>
 						<td><fmt:formatDate value="${row.regdate}"
 								pattern="yyyy-MM-dd  HH:mm" /></td>
